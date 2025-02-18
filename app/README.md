@@ -21,5 +21,20 @@ Add following lines to `package.json`:
 ## Example of `.env`
 
 ```ini
+# Privy (Public)
 NEXT_PUBLIC_PRIVY_APP_ID=""
+
+# CDP
+CDP_API_KEY_NAME=""
+CDP_API_KEY_PRIVATE_KEY=""
+
+# OpenAI
+OPENAI_API_KEY=""
+
+# MongoDB
+MONGODB_URI=""
+
+# Privy
+PRIVY_APP_ID=""
+PRIVY_APP_SECRET=""
 ```
