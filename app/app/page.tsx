@@ -22,7 +22,7 @@ export default function LandingPage() {
       </h1>
       <p className="font-medium tracking-tight text-muted-foreground max-w-[680px] mt-2">
         A platform for creating personalized AI agents integrated with the Sonic
-        ecosystem for your homies or other not-techie users
+        ecosystem for your homies and other not-techie users
       </p>
       <Link href="/agents/new">
         <Button className="mt-4">
