@@ -1,13 +1,22 @@
 "use client";
 
+import { AgentLoaderSection } from "@/components/agents/agent-loader-section";
+import { LoadingSection } from "@/components/loading-section";
+import { LoginSection } from "@/components/login-section";
+import { usePrivy } from "@privy-io/react-auth";
 import { useParams } from "next/navigation";
 
 export default function AgentPage() {
   const { id } = useParams();
+  const { ready, authenticated } = usePrivy();
 
-  return (
-    <main className="container py-16 lg:px-80">
-      <p>Agent page...</p>
-    </main>
-  );
+  if (ready && authenticated) {
+    return <AgentLoaderSection id={id as string} />;
+  }
+
+  if (ready && !authenticated) {
+    return <LoginSection />;
+  }
+
+  return <LoadingSection />;
 }

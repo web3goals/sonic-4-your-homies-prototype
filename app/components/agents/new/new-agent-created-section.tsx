@@ -26,7 +26,7 @@ export function NewAgentCreatedSection(props: { newAgent: Agent }) {
       <div className="flex flex-col items-start gap-2">
         <Link
           href={
-            `${chainConfig.chain.blockExplorers?.default.url}address/${props.newAgent.privyServerWallet.address}` ||
+            `${chainConfig.chain.blockExplorers?.default.url}/address/${props.newAgent.privyServerWallet.address}` ||
             "/"
           }
           target="_blank"
