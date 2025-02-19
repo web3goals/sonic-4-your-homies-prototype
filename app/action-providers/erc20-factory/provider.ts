@@ -16,7 +16,7 @@ import { erc20FactoryAbi } from "./abi/erc20Factory";
 import { CreateERC20Schema } from "./schemas";
 
 /**
- * An action provider for creating ERC20 tokens.
+ * An action provider for the ERC20 factory contract.
  */
 export class ERC20FactoryActionProvider extends ActionProvider {
   erc20FactoryContracts: Map<string, Address>;
@@ -36,12 +36,12 @@ export class ERC20FactoryActionProvider extends ActionProvider {
   @CreateAction({
     name: "create_erc20",
     description: `
-  This tool will create an ERC20 token.
+This tool will create an ERC20 token.
   
-  It takes the following inputs:
-  - name: The name for the ERC20 token to create (e.g., 'Simon Cat Token')
-  - symbol: The symbol for the ERC20 token to create (e.g., 'SCT')
-  - amount: The amount of the ERC20 tokens to create
+It takes the following inputs:
+- name: The name for the ERC20 token to create (e.g., 'Simon Cat Token')
+- symbol: The symbol for the ERC20 token to create (e.g., 'SCT')
+- amount: The amount of the ERC20 tokens to create
           `,
     schema: CreateERC20Schema,
   })
@@ -55,10 +55,10 @@ export class ERC20FactoryActionProvider extends ActionProvider {
       if (!chainId) {
         return "Network chainId is not available";
       }
-      // Get ERC20 Factory contract address
+      // Get ERC20 factory contract address
       const erc20Factory = this.erc20FactoryContracts.get(chainId as string);
       if (!erc20Factory) {
-        return "ERC20 Factory contract address is not available";
+        return "ERC20 factory contract address is not available";
       }
       // Send a transaction to create an ERC20 token
       const hash = await walletProvider.sendTransaction({
