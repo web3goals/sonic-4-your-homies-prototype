@@ -1,3 +1,4 @@
+import { Address } from "viem";
 import { Chain } from "viem/chains";
 
 export const sonicTestnet: Chain = {
@@ -23,6 +24,8 @@ export const sonicTestnet: Chain = {
 export const chainsConfig = [
   {
     chain: sonicTestnet,
-    contracts: {},
+    contracts: {
+      erc20Factory: "0x02008a8dbc938bd7930bf370617065b6b0c1221a" as Address,
+    },
   },
 ];

@@ -1,6 +1,8 @@
 "use server";
 
+import { erc20FactoryActionProvider } from "@/action-providers/erc20-factory/provider";
 import { twitterActionProvider } from "@/action-providers/twitter/provider";
+import { chainsConfig } from "@/config/chains";
 import { createFailedApiResponse, createSuccessApiResponse } from "@/lib/api";
 import { getChainById } from "@/lib/chains";
 import { errorToString } from "@/lib/converters";
@@ -92,6 +94,14 @@ export async function POST(
       walletProvider: walletProvider,
       actionProviders: [
         walletActionProvider(),
+        erc20FactoryActionProvider({
+          erc20FactoryContracts: new Map(
+            chainsConfig.map((chainConfig) => [
+              chainConfig.chain.id.toString(),
+              chainConfig.contracts.erc20Factory,
+            ])
+          ),
+        }),
         ...(agent.twitterAccount
           ? [
               twitterActionProvider({
