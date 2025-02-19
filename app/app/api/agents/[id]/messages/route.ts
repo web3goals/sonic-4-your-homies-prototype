@@ -1,5 +1,6 @@
 "use server";
 
+import { addressBookActionProvider } from "@/action-providers/address-book/provider";
 import { erc20FactoryActionProvider } from "@/action-providers/erc20-factory/provider";
 import { twitterActionProvider } from "@/action-providers/twitter/provider";
 import { chainsConfig } from "@/config/chains";
@@ -94,6 +95,7 @@ export async function POST(
       walletProvider: walletProvider,
       actionProviders: [
         walletActionProvider(),
+        addressBookActionProvider({ addressBook: agent.addressBook }),
         erc20FactoryActionProvider({
           erc20FactoryContracts: new Map(
             chainsConfig.map((chainConfig) => [
