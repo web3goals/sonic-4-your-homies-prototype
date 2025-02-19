@@ -1,6 +1,6 @@
 import { Chain } from "viem/chains";
 
-const sonicTestnet: Chain = {
+export const sonicTestnet: Chain = {
   id: 57054,
   name: "Sonic Testnet",
   nativeCurrency: {
@@ -20,7 +20,9 @@ const sonicTestnet: Chain = {
   testnet: true,
 };
 
-export const chainConfig = {
-  chain: sonicTestnet,
-  contracts: {},
-};
+export const chainsConfig = [
+  {
+    chain: sonicTestnet,
+    contracts: {},
+  },
+];

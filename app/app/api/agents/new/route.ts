@@ -25,6 +25,7 @@ const requestBodySchema = z.object({
     emoji: z.string().min(1),
     features: z.string().min(1),
   }),
+  chainId: z.number(),
   addressBook: z.array(requestBodyAddressBookElementSchema),
   twitter: z
     .object({
@@ -88,6 +89,7 @@ export async function POST(request: NextRequest) {
       ],
       user: bodyParseResult.data.user,
       personality: bodyParseResult.data.personality,
+      chainId: bodyParseResult.data.chainId,
       addressBook: bodyParseResult.data.addressBook,
       privyServerWallet: {
         id: privyId,

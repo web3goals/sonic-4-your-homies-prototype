@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { sonicTestnet } from "@/config/chains";
 import useError from "@/hooks/use-error";
 import { Agent } from "@/mongodb/models/agent";
 import { NewAgentRequestData } from "@/types/new-agent-request-data";
@@ -29,6 +30,7 @@ export function NewAgentFinalStepSection(props: {
       // Prepare a request data
       const requestData = { ...props.newAgentRequestData };
       requestData.creatorId = user.id;
+      requestData.chainId = sonicTestnet.id;
       if (
         !props.newAgentRequestData.twitter?.apiKey ||
         !props.newAgentRequestData.twitter?.apiSecret ||

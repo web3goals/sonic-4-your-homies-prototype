@@ -1,8 +1,8 @@
 "use server";
 
 import { twitterActionProvider } from "@/action-providers/twitter/provider";
-import { chainConfig } from "@/config/chain";
 import { createFailedApiResponse, createSuccessApiResponse } from "@/lib/api";
+import { getChainById } from "@/lib/chains";
 import { errorToString } from "@/lib/converters";
 import { findAgent, updateAgent } from "@/mongodb/services/agent-service";
 import {
@@ -84,7 +84,7 @@ export async function POST(
     // Initialize AgentKit with tools
     const client = createWalletClient({
       account,
-      chain: chainConfig.chain,
+      chain: getChainById(agent.chainId),
       transport: http(),
     });
     const walletProvider = new ViemWalletProvider(client);

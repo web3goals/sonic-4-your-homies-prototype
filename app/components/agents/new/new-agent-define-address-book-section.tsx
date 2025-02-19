@@ -37,7 +37,7 @@ export function NewAgentDefineAddressBookSection(props: {
     defaultValues: {
       addressBook: [
         "Alice,0x0000000000000000000000000000000000000000",
-        "Wildlife Foundation,0x0000000000000000000000000000000000000000",
+        "Bob,0x0000000000000000000000000000000000000000",
       ].join("\n"),
     },
   });
@@ -83,7 +83,7 @@ export function NewAgentDefineAddressBookSection(props: {
                 <FormControl>
                   <Textarea
                     placeholder={
-                      "Alice,0x0000000000000000000000000000000000000000\nWildlife Foundation,0x0000000000000000000000000000000000000000"
+                      "Alice,0x0000000000000000000000000000000000000000\nBob,0x0000000000000000000000000000000000000000"
                     }
                     disabled={isProsessing}
                     rows={5}
