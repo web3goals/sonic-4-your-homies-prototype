@@ -1,9 +1,4 @@
-import {
-  ActionProvider,
-  CreateAction,
-  EvmWalletProvider,
-} from "@coinbase/agentkit";
-import { z } from "zod";
+import { ActionProvider, CreateAction } from "@coinbase/agentkit";
 import { GetAddressBookRecordsSchema } from "./schemas";
 
 /**
@@ -31,10 +26,7 @@ This tool will get the address book records.
     `,
     schema: GetAddressBookRecordsSchema,
   })
-  async getRecords(
-    walletProvider: EvmWalletProvider,
-    args: z.infer<typeof GetAddressBookRecordsSchema>
-  ): Promise<string> {
+  async getRecords(): Promise<string> {
     try {
       const addressBookRecords = this.addressBook.map(
         (record) => `${record.name},${record.address}`
