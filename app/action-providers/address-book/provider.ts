@@ -4,7 +4,7 @@ import {
   EvmWalletProvider,
 } from "@coinbase/agentkit";
 import { z } from "zod";
-import { GetAddressBookAddressSchema } from "./schemas";
+import { GetAddressBookRecordsSchema } from "./schemas";
 
 /**
  * An action provider with tools for the address book.
@@ -18,34 +18,30 @@ export class AddressBookActionProvider extends ActionProvider {
   }
 
   /**
-   * Gets the address of a person or organization from the address book.
+   * Get the records from the address book.
    *
    * @param walletProvider - The wallet provider.
    * @param args - The input arguments for the action.
    * @returns A message containing the address.
    */
   @CreateAction({
-    name: "get_address_book_address",
+    name: "get_address_book_records",
     description: `
-This tool will get the address of a person or organization from the address book.
-It takes the name of a person or organization.
+This tool will get the address book records.
     `,
-    schema: GetAddressBookAddressSchema,
+    schema: GetAddressBookRecordsSchema,
   })
-  async getAddress(
+  async getRecords(
     walletProvider: EvmWalletProvider,
-    args: z.infer<typeof GetAddressBookAddressSchema>
+    args: z.infer<typeof GetAddressBookRecordsSchema>
   ): Promise<string> {
     try {
-      const record = this.addressBook.find(
-        (record) => record.name === args.name
+      const addressBookRecords = this.addressBook.map(
+        (record) => `${record.name},${record.address}`
       );
-      if (!record) {
-        return `There's no address for ${args.name} in the address book`;
-      }
-      return `Address of ${args.name} is ${record.address}`;
+      return `Address book records:\n${addressBookRecords.join("\n")}`;
     } catch (error) {
-      return `Error getting address: ${error}`;
+      return `Error getting address book records: ${error}`;
     }
   }
 
