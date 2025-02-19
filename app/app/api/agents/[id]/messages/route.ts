@@ -3,16 +3,13 @@
 import { addressBookActionProvider } from "@/action-providers/address-book/provider";
 import { erc20FactoryActionProvider } from "@/action-providers/erc20-factory/provider";
 import { twitterActionProvider } from "@/action-providers/twitter/provider";
+import { walletActionProvider } from "@/action-providers/wallet/provider";
 import { chainsConfig } from "@/config/chains";
 import { createFailedApiResponse, createSuccessApiResponse } from "@/lib/api";
 import { getChainById } from "@/lib/chains";
 import { errorToString } from "@/lib/converters";
 import { findAgent, updateAgent } from "@/mongodb/services/agent-service";
-import {
-  AgentKit,
-  ViemWalletProvider,
-  walletActionProvider,
-} from "@coinbase/agentkit";
+import { AgentKit, ViemWalletProvider } from "@coinbase/agentkit";
 import { getLangChainTools } from "@coinbase/agentkit-langchain";
 import {
   HumanMessage,
