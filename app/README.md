@@ -18,6 +18,15 @@ Add following lines to `package.json`:
 }
 ```
 
+### How to enable `@CreateAction` decorators
+
+Add following lines to `tsconfig.json`
+
+```js
+"experimentalDecorators": true,
+"emitDecoratorMetadata": true,
+```
+
 ## Example of `.env`
 
 ```ini

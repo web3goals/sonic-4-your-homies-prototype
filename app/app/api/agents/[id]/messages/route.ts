@@ -1,5 +1,6 @@
 "use server";
 
+import { twitterActionProvider } from "@/action-providers/twitter/provider";
 import { chainConfig } from "@/config/chain";
 import { createFailedApiResponse, createSuccessApiResponse } from "@/lib/api";
 import { errorToString } from "@/lib/converters";
@@ -89,7 +90,19 @@ export async function POST(
     const walletProvider = new ViemWalletProvider(client);
     const agentKit = await AgentKit.from({
       walletProvider: walletProvider,
-      actionProviders: [walletActionProvider()],
+      actionProviders: [
+        walletActionProvider(),
+        ...(agent.twitterAccount
+          ? [
+              twitterActionProvider({
+                apiKey: agent.twitterAccount.apiKey,
+                apiSecret: agent.twitterAccount.apiSecret,
+                accessToken: agent.twitterAccount.accessToken,
+                accessTokenSecret: agent.twitterAccount.accessTokenSecret,
+              }),
+            ]
+          : []),
+      ],
       cdpApiKeyName: process.env.CDP_API_KEY_NAME,
       cdpApiKeyPrivateKey: process.env.CDP_API_KEY_PRIVATE_KEY?.replace(
         /\\n/g,
