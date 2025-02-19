@@ -1,9 +1,20 @@
 "use client";
 
+import { NewAgentSection } from "@/components/agents/new/new-agent-section";
+import { LoadingSection } from "@/components/loading-section";
+import { LoginSection } from "@/components/login-section";
+import { usePrivy } from "@privy-io/react-auth";
+
 export default function NewAgentPage() {
-  return (
-    <main className="container py-16 lg:px-80">
-      <p>New agent page...</p>
-    </main>
-  );
+  const { ready, authenticated } = usePrivy();
+
+  if (ready && authenticated) {
+    return <NewAgentSection />;
+  }
+
+  if (ready && !authenticated) {
+    return <LoginSection />;
+  }
+
+  return <LoadingSection />;
 }
