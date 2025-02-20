@@ -1,41 +1,15 @@
 import { z } from "zod";
 
+import { sonicTestnet } from "@/config/chains";
 import {
   ActionProvider,
   CreateAction,
+  Network,
   ViemWalletProvider,
 } from "@coinbase/agentkit";
-import { GetWalletDetailsSchema, NativeTransferSchema } from "./schemas";
 import { Address, formatEther } from "viem";
-import { sonicTestnet } from "@/config/chains";
-
-const DEFAULT_TERMINOLOGY = {
-  unit: "",
-  displayUnit: "",
-  type: "Hash",
-  verb: "transfer",
-};
-
-const SONIC_TERMINOLOGY = {
-  unit: "WEI",
-  displayUnit: "S",
-  type: "Transaction hash",
-  verb: "transaction",
-};
-
-const EVM_TERMINOLOGY = {
-  unit: "WEI",
-  displayUnit: "ETH",
-  type: "Transaction hash",
-  verb: "transaction",
-};
-
-const SVM_TERMINOLOGY = {
-  unit: "LAMPORTS",
-  displayUnit: "SOL",
-  type: "Signature",
-  verb: "transfer",
-};
+import { sonic } from "viem/chains";
+import { GetWalletDetailsSchema, NativeTransferSchema } from "./schemas";
 
 /**
  * WalletActionProvider provides actions for getting basic wallet information.
@@ -72,14 +46,7 @@ export class WalletActionProvider extends ActionProvider {
       const network = walletProvider.getNetwork();
       const balance = await walletProvider.getBalance();
       const name = walletProvider.getName();
-      let terminology = DEFAULT_TERMINOLOGY;
-      if (network.chainId === sonicTestnet.id.toString()) {
-        terminology = SONIC_TERMINOLOGY;
-      } else if (network.protocolFamily === "evm") {
-        terminology = EVM_TERMINOLOGY;
-      } else if (network.protocolFamily === "svm") {
-        terminology = SVM_TERMINOLOGY;
-      }
+      const terminology = this.getTerminology(network);
 
       return [
         "Wallet Details:",
@@ -125,14 +92,7 @@ Important notes:
   ): Promise<string> {
     try {
       const network = walletProvider.getNetwork();
-      let terminology = DEFAULT_TERMINOLOGY;
-      if (network.chainId === sonicTestnet.id.toString()) {
-        terminology = SONIC_TERMINOLOGY;
-      } else if (network.protocolFamily === "evm") {
-        terminology = EVM_TERMINOLOGY;
-      } else if (network.protocolFamily === "svm") {
-        terminology = SVM_TERMINOLOGY;
-      }
+      const terminology = this.getTerminology(network);
 
       if (network.protocolFamily === "evm" && !args.to.startsWith("0x")) {
         args.to = `0x${args.to}`;
@@ -148,14 +108,7 @@ Important notes:
       ].join("\n");
     } catch (error) {
       const network = walletProvider.getNetwork();
-      let terminology = DEFAULT_TERMINOLOGY;
-      if (network.chainId === sonicTestnet.id.toString()) {
-        terminology = SONIC_TERMINOLOGY;
-      } else if (network.protocolFamily === "evm") {
-        terminology = EVM_TERMINOLOGY;
-      } else if (network.protocolFamily === "svm") {
-        terminology = SVM_TERMINOLOGY;
-      }
+      const terminology = this.getTerminology(network);
       return `Error during ${terminology.verb}: ${error}`;
     }
   }
@@ -168,6 +121,50 @@ Important notes:
    * @returns True, as wallet actions are supported on all networks.
    */
   supportsNetwork = (): boolean => true;
+
+  /**
+   * Returns the terminology for the given network.
+   */
+  getTerminology(network: Network): {
+    unit: string;
+    displayUnit: string;
+    type: string;
+    verb: string;
+  } {
+    if (
+      network.chainId == sonic.id.toString() ||
+      network.chainId === sonicTestnet.id.toString()
+    ) {
+      return {
+        unit: "WEI",
+        displayUnit: "S",
+        type: "Transaction hash",
+        verb: "transaction",
+      };
+    }
+    if (network.protocolFamily === "evm") {
+      return {
+        unit: "WEI",
+        displayUnit: "ETH",
+        type: "Transaction hash",
+        verb: "transaction",
+      };
+    }
+    if (network.protocolFamily === "svm") {
+      return {
+        unit: "LAMPORTS",
+        displayUnit: "SOL",
+        type: "Signature",
+        verb: "transfer",
+      };
+    }
+    return {
+      unit: "",
+      displayUnit: "",
+      type: "Hash",
+      verb: "transfer",
+    };
+  }
 }
 
 /**

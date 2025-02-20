@@ -1,5 +1,5 @@
 import { Address } from "viem";
-import { Chain } from "viem/chains";
+import { Chain, sonic } from "viem/chains";
 
 export const sonicTestnet: Chain = {
   id: 57054,
@@ -22,6 +22,12 @@ export const sonicTestnet: Chain = {
 };
 
 export const chainsConfig = [
+  {
+    chain: sonic,
+    contracts: {
+      erc20Factory: undefined,
+    },
+  },
   {
     chain: sonicTestnet,
     contracts: {
