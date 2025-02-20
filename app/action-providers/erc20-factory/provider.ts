@@ -28,21 +28,16 @@ export class ERC20FactoryActionProvider extends ActionProvider {
 
   /**
    * Create an ERC20 token.
-   *
-   * @param walletProvider - The wallet provider.
-   * @param args - The input arguments for the action.
-   * @returns A message containing the action details.
    */
   @CreateAction({
     name: "create_erc20",
-    description: `
-This tool will create an ERC20 token.
-  
-It takes the following inputs:
-- name: The name for the ERC20 token to create (e.g., 'Simon Cat Token')
-- symbol: The symbol for the ERC20 token to create (e.g., 'SCT')
-- amount: The amount of the ERC20 tokens to create
-          `,
+    description: [
+      "This tool will create an ERC20 token.",
+      "It takes the following inputs:",
+      "- name: The name for the ERC20 token to create (e.g., 'Simon Cat Token')",
+      "- symbol: The symbol for the ERC20 token to create (e.g., 'SCT')",
+      "- amount: The amount of the ERC20 tokens to create",
+    ].join("\n"),
     schema: CreateERC20Schema,
   })
   async createErc20(
@@ -87,8 +82,6 @@ It takes the following inputs:
 
   /**
    * Checks if the action provider supports the given network.
-   *
-   * @returns True if the action provider supports the network, false otherwise.
    */
   supportsNetwork = (network: Network) => {
     if (!network?.chainId) {

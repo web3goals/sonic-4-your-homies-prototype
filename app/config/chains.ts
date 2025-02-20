@@ -25,7 +25,7 @@ export const chainsConfig = [
   {
     chain: sonic,
     contracts: {
-      erc20Factory: undefined,
+      erc20Factory: "0x0000000000000000000000000000000000000000" as Address,
     },
   },
   {
