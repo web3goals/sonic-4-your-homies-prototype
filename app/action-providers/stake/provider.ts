@@ -1,8 +1,7 @@
-import { chainsConfig } from "@/config/chains";
+import { sonicConfig } from "@/config/sonic";
 import {
   ActionProvider,
   CreateAction,
-  Network,
   ViemWalletProvider,
 } from "@coinbase/agentkit";
 import {
@@ -14,9 +13,9 @@ import {
   parseEther,
 } from "viem";
 import { sonic } from "viem/chains";
+import { z } from "zod";
 import { stakeAbi } from "./abi/stake";
 import { GetStakeDetailsSchema, StakeSchema } from "./schemas";
-import { z } from "zod";
 
 /**
  * An action provider with tools for stake.
@@ -41,26 +40,18 @@ export class StakeActionProvider extends ActionProvider {
   })
   async getStakeDetails(walletProvider: ViemWalletProvider): Promise<string> {
     try {
-      // Define chain config
-      const sonicChainConfig = chainsConfig.find(
-        (config) => config.chain.id === sonic.id
-      );
-      if (!sonicChainConfig) {
-        return "Sonic chain config is not available";
-      }
-
       // Get stake tokens
       const publicClient = createPublicClient({
         chain: sonic,
         transport: http(),
       });
       const stakeTokens = await publicClient.readContract({
-        address: sonicChainConfig.contracts.stake,
+        address: sonicConfig.contracts.stake,
         abi: stakeAbi,
         functionName: "getStake",
         args: [
           walletProvider.getAddress() as Address,
-          BigInt(sonicChainConfig.stakeValidatorId),
+          BigInt(sonicConfig.stakeValidatorId),
         ],
       });
 
@@ -100,21 +91,13 @@ export class StakeActionProvider extends ActionProvider {
     args: z.infer<typeof StakeSchema>
   ): Promise<string> {
     try {
-      // Define chain config
-      const sonicChainConfig = chainsConfig.find(
-        (config) => config.chain.id === sonic.id
-      );
-      if (!sonicChainConfig) {
-        return "Sonic chain config is not available";
-      }
-
       // Send transaction to stake
       const hash = await walletProvider.sendTransaction({
-        to: sonicChainConfig.contracts.stake,
+        to: sonicConfig.contracts.stake,
         data: encodeFunctionData({
           abi: stakeAbi,
           functionName: "delegate",
-          args: [BigInt(sonicChainConfig.stakeValidatorId)],
+          args: [BigInt(sonicConfig.stakeValidatorId)],
         }),
         value: parseEther(args.amount.toString()),
       });
@@ -130,8 +113,8 @@ export class StakeActionProvider extends ActionProvider {
   /**
    * Checks if the action provider supports the given network.
    */
-  supportsNetwork = (network: Network) => {
-    return network.chainId == sonic.id.toString();
+  supportsNetwork = () => {
+    return true;
   };
 }
 

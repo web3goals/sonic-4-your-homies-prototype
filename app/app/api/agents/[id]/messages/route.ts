@@ -7,9 +7,8 @@ import { erc20ActionProvider } from "@/action-providers/erc20/provider";
 import { stakeActionProvider } from "@/action-providers/stake/provider";
 import { twitterActionProvider } from "@/action-providers/twitter/provider";
 import { walletActionProvider } from "@/action-providers/wallet/provider";
-import { chainsConfig } from "@/config/chains";
+import { sonicConfig } from "@/config/sonic";
 import { createFailedApiResponse, createSuccessApiResponse } from "@/lib/api";
-import { getChainById } from "@/lib/chains";
 import { errorToString } from "@/lib/converters";
 import { findAgent, updateAgent } from "@/mongodb/services/agent-service";
 import { AgentKit, ViemWalletProvider } from "@coinbase/agentkit";
@@ -87,7 +86,7 @@ export async function POST(
     // Initialize AgentKit with tools
     const client = createWalletClient({
       account,
-      chain: getChainById(agent.chainId),
+      chain: sonicConfig.chain,
       transport: http(),
     });
     const walletProvider = new ViemWalletProvider(client);
@@ -99,14 +98,7 @@ export async function POST(
         stakeActionProvider(),
         addressBookActionProvider({ addressBook: agent.addressBook }),
         erc20ActionProvider(),
-        erc20FactoryActionProvider({
-          erc20FactoryContracts: new Map(
-            chainsConfig.map((chainConfig) => [
-              chainConfig.chain.id.toString(),
-              chainConfig.contracts.erc20Factory,
-            ])
-          ),
-        }),
+        erc20FactoryActionProvider(),
         ...(agent.twitterAccount
           ? [
               twitterActionProvider({

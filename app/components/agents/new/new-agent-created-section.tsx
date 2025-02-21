@@ -2,16 +2,14 @@
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { sonicConfig } from "@/config/sonic";
 import { toast } from "@/hooks/use-toast";
-import { getChainById } from "@/lib/chains";
 import { Agent } from "@/mongodb/models/agent";
 import { PartyPopperIcon, ShareIcon, WalletIcon } from "lucide-react";
 import Link from "next/link";
 import Confetti from "react-confetti";
 
 export function NewAgentCreatedSection(props: { newAgent: Agent }) {
-  const newAgentChain = getChainById(props.newAgent.chainId);
-
   return (
     <main className="container py-16 lg:px-80">
       <div className="flex items-center justify-center size-24 rounded-full bg-primary">
@@ -28,7 +26,7 @@ export function NewAgentCreatedSection(props: { newAgent: Agent }) {
       <div className="flex flex-col items-start gap-2">
         <Link
           href={
-            `${newAgentChain.blockExplorers?.default.url}/address/${props.newAgent.privyServerWallet.address}` ||
+            `${sonicConfig.chain.blockExplorers?.default.url}/address/${props.newAgent.privyServerWallet.address}` ||
             "/"
           }
           target="_blank"

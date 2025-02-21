@@ -1,6 +1,6 @@
 "use server";
 
-import { chainsConfig } from "@/config/chains";
+import { sonicConfig } from "@/config/sonic";
 import { createFailedApiResponse, createSuccessApiResponse } from "@/lib/api";
 import { errorToString } from "@/lib/converters";
 import { PrivyClient } from "@privy-io/server-auth";
@@ -30,14 +30,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Define Sonic chain config
-    const sonicChainConfig = chainsConfig.find(
-      (config) => config.chain.id === sonic.id
-    );
-    if (!sonicChainConfig) {
-      throw new Error("Sonic chain config is not available");
-    }
-
     // Get data for swap transaction
     const { data } = await axios.get(
       "https://deswap.debridge.finance/v1.0/chain/transaction",
@@ -46,7 +38,7 @@ export async function POST(request: NextRequest) {
           chainId: "100000014",
           tokenIn: "0x0000000000000000000000000000000000000000",
           tokenInAmount: parseEther("0.15").toString(),
-          tokenOut: sonicChainConfig.contracts.scUSD,
+          tokenOut: sonicConfig.contracts.scUSD,
           tokenOutRecipient: bodyParseResult.data.privyServerWalletAddress,
           tab: new Date().getTime(),
         },

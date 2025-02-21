@@ -1,16 +1,10 @@
+import { sonicConfig } from "@/config/sonic";
 import {
   ActionProvider,
   CreateAction,
-  Network,
   ViemWalletProvider,
 } from "@coinbase/agentkit";
-import {
-  Address,
-  encodeFunctionData,
-  Hex,
-  parseEther,
-  parseEventLogs,
-} from "viem";
+import { encodeFunctionData, parseEther, parseEventLogs } from "viem";
 import { z } from "zod";
 import { erc20FactoryAbi } from "./abi/erc20Factory";
 import { CreateERC20Schema } from "./schemas";
@@ -19,11 +13,8 @@ import { CreateERC20Schema } from "./schemas";
  * An action provider for the ERC20 factory contract.
  */
 export class ERC20FactoryActionProvider extends ActionProvider {
-  erc20FactoryContracts: Map<string, Address>;
-
-  constructor(args: { erc20FactoryContracts: Map<string, Address> }) {
+  constructor() {
     super("erc20Factory", []);
-    this.erc20FactoryContracts = args.erc20FactoryContracts;
   }
 
   /**
@@ -45,19 +36,9 @@ export class ERC20FactoryActionProvider extends ActionProvider {
     args: z.infer<typeof CreateERC20Schema>
   ): Promise<string> {
     try {
-      // Get chain ID
-      const chainId = walletProvider.getNetwork().chainId;
-      if (!chainId) {
-        return "Network chainId is not available";
-      }
-      // Get ERC20 factory contract address
-      const erc20Factory = this.erc20FactoryContracts.get(chainId as string);
-      if (!erc20Factory) {
-        return "ERC20 factory contract address is not available";
-      }
       // Send a transaction to create an ERC20 token
       const hash = await walletProvider.sendTransaction({
-        to: erc20Factory as Hex,
+        to: sonicConfig.contracts.erc20Factory,
         data: encodeFunctionData({
           abi: erc20FactoryAbi,
           functionName: "createERC20",
@@ -83,14 +64,10 @@ export class ERC20FactoryActionProvider extends ActionProvider {
   /**
    * Checks if the action provider supports the given network.
    */
-  supportsNetwork = (network: Network) => {
-    if (!network?.chainId) {
-      return false;
-    }
-    return this.erc20FactoryContracts.has(network.chainId);
+  supportsNetwork = () => {
+    return true;
   };
 }
 
-export const erc20FactoryActionProvider = (args: {
-  erc20FactoryContracts: Map<string, Address>;
-}) => new ERC20FactoryActionProvider(args);
+export const erc20FactoryActionProvider = () =>
+  new ERC20FactoryActionProvider();

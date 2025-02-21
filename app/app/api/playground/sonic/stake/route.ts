@@ -1,7 +1,7 @@
 "use server";
 
 import { stakeAbi } from "@/action-providers/stake/abi/stake";
-import { chainsConfig } from "@/config/chains";
+import { sonicConfig } from "@/config/sonic";
 import { createFailedApiResponse, createSuccessApiResponse } from "@/lib/api";
 import { errorToString } from "@/lib/converters";
 import { PrivyClient } from "@privy-io/server-auth";
@@ -37,14 +37,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Define Sonic chain config
-    const sonicChainConfig = chainsConfig.find(
-      (config) => config.chain.id === sonic.id
-    );
-    if (!sonicChainConfig) {
-      throw new Error("Sonic chain config is not available");
-    }
-
     // Define wallet client
     const privy = new PrivyClient(
       process.env.PRIVY_APP_ID as string,
@@ -69,23 +61,23 @@ export async function POST(request: NextRequest) {
 
     // Get stake
     const stake = await publicClient.readContract({
-      address: sonicChainConfig.contracts.stake,
+      address: sonicConfig.contracts.stake,
       abi: stakeAbi,
       functionName: "getStake",
       args: [
         bodyParseResult.data.privyServerWalletAddress as Address,
-        BigInt(sonicChainConfig.stakeValidatorId),
+        BigInt(sonicConfig.stakeValidatorId),
       ],
     });
     console.log({ stake });
 
     // Send transaction to stake
     const hash = await walletClient.sendTransaction({
-      to: sonicChainConfig.contracts.stake,
+      to: sonicConfig.contracts.stake,
       data: encodeFunctionData({
         abi: stakeAbi,
         functionName: "delegate",
-        args: [BigInt(sonicChainConfig.stakeValidatorId)],
+        args: [BigInt(sonicConfig.stakeValidatorId)],
       }),
       value: parseEther("0.1"),
     });

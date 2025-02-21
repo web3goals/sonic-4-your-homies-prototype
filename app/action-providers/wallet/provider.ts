@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { sonicTestnet } from "@/config/chains";
+import { sonicConfig } from "@/config/sonic";
 import {
   ActionProvider,
   CreateAction,
@@ -8,7 +8,6 @@ import {
   ViemWalletProvider,
 } from "@coinbase/agentkit";
 import { Address, formatEther } from "viem";
-import { sonic } from "viem/chains";
 import { GetWalletDetailsSchema, NativeTransferSchema } from "./schemas";
 
 /**
@@ -120,7 +119,9 @@ Important notes:
    * @param _ - The network to check.
    * @returns True, as wallet actions are supported on all networks.
    */
-  supportsNetwork = (): boolean => true;
+  supportsNetwork = () => {
+    return true;
+  };
 
   /**
    * Returns the terminology for the given network.
@@ -131,10 +132,7 @@ Important notes:
     type: string;
     verb: string;
   } {
-    if (
-      network.chainId == sonic.id.toString() ||
-      network.chainId === sonicTestnet.id.toString()
-    ) {
+    if (network.chainId == sonicConfig.chain.id.toString()) {
       return {
         unit: "WEI",
         displayUnit: "S",
