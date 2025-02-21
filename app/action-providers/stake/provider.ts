@@ -33,18 +33,21 @@ export class StakeActionProvider extends ActionProvider {
     description: [
       "This tool will return the stake balance including:",
       "- Number of staked tokens",
+      "- Number of pending reward tokens",
       "- Number of reward tokens",
     ].join("\n"),
     schema: GetStakeBalanceSchema,
   })
   async getStakeBalance(walletProvider: ViemWalletProvider): Promise<string> {
     try {
-      // Get stake tokens
+      // Define public client
       const publicClient = createPublicClient({
         chain: sonic,
         transport: http(),
       });
-      const stakeTokens = await publicClient.readContract({
+
+      // Get stake tokens
+      const stakedTokens = await publicClient.readContract({
         address: sonicConfig.contracts.stake,
         abi: stakeAbi,
         functionName: "getStake",
@@ -54,12 +57,30 @@ export class StakeActionProvider extends ActionProvider {
         ],
       });
 
-      // Get reward tokens
-      const rewardTokens = BigInt(0); // TODO: Use contract to get this value
+      const rewardTokens = await publicClient.readContract({
+        address: sonicConfig.contracts.stake,
+        abi: stakeAbi,
+        functionName: "rewardsStash",
+        args: [
+          walletProvider.getAddress() as Address,
+          BigInt(sonicConfig.stakeValidatorId),
+        ],
+      });
+
+      const pendingRewardTokens = await publicClient.readContract({
+        address: sonicConfig.contracts.stake,
+        abi: stakeAbi,
+        functionName: "pendingRewards",
+        args: [
+          walletProvider.getAddress() as Address,
+          BigInt(sonicConfig.stakeValidatorId),
+        ],
+      });
 
       return [
         "Stake balance:",
-        `- Staked: ${formatEther(stakeTokens)} S`,
+        `- Staked: ${formatEther(stakedTokens)} S`,
+        `- Pending reward: ${formatEther(pendingRewardTokens)} S`,
         `- Reward: ${formatEther(rewardTokens)} S`,
       ].join("\n");
     } catch (error) {
