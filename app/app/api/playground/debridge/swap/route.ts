@@ -1,17 +1,17 @@
 "use server";
 
+import { chainsConfig } from "@/config/chains";
 import { createFailedApiResponse, createSuccessApiResponse } from "@/lib/api";
-import { getChainById } from "@/lib/chains";
 import { errorToString } from "@/lib/converters";
 import { PrivyClient } from "@privy-io/server-auth";
 import { createViemAccount } from "@privy-io/server-auth/viem";
 import axios from "axios";
 import { NextRequest } from "next/server";
 import { Address, createWalletClient, http, parseEther } from "viem";
+import { sonic } from "viem/chains";
 import { z } from "zod";
 
 const requestBodySchema = z.object({
-  chainId: z.number(),
   privyServerWalletId: z.string().min(1),
   privyServerWalletAddress: z.string().min(1),
 });
@@ -30,23 +30,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Define Sonic chain config
+    const sonicChainConfig = chainsConfig.find(
+      (config) => config.chain.id === sonic.id
+    );
+    if (!sonicChainConfig) {
+      throw new Error("Sonic chain config is not available");
+    }
+
     // Get data for swap transaction
     const { data } = await axios.get(
-      "https://dln.debridge.finance/v1.0/chain/transaction",
+      "https://deswap.debridge.finance/v1.0/chain/transaction",
       {
         params: {
           chainId: "100000014",
           tokenIn: "0x0000000000000000000000000000000000000000",
-          tokenInAmount: parseEther("0.01").toString(),
-          tokenOut: "0xd3DCe716f3eF535C5Ff8d041c1A41C3bd89b97aE",
+          tokenInAmount: parseEther("0.15").toString(),
+          tokenOut: sonicChainConfig.contracts.scUSD,
           tokenOutRecipient: bodyParseResult.data.privyServerWalletAddress,
+          tab: new Date().getTime(),
         },
       }
     );
     const swapTxData = {
       data: data.tx.data,
       to: data.tx.to,
-      value: data.tx.value,
+      value: BigInt(data.tx.value),
     };
 
     // Define wallet client
@@ -61,19 +70,14 @@ export async function POST(request: NextRequest) {
     });
     const walletClient = createWalletClient({
       account,
-      chain: getChainById(bodyParseResult.data.chainId),
+      chain: sonic,
       transport: http(),
     });
 
-    // Send swap transaction
-    const swapTxRequest = await walletClient.prepareTransactionRequest({
+    const swapTxHash = await walletClient.sendTransaction({
+      data: swapTxData.data,
       to: swapTxData.to,
       value: swapTxData.value,
-      data: swapTxData.data,
-    });
-    const serializedSwapTx = await walletClient.signTransaction(swapTxRequest);
-    const swapTxHash = await walletClient.sendRawTransaction({
-      serializedTransaction: serializedSwapTx,
     });
 
     return createSuccessApiResponse({ swapTxHash });
