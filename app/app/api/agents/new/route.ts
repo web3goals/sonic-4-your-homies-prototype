@@ -26,7 +26,6 @@ const requestBodySchema = z.object({
     emoji: z.string().min(1),
     features: z.string().min(1),
   }),
-  chainId: z.number(),
   addressBook: z.array(requestBodyAddressBookElementSchema),
   twitter: z
     .object({
@@ -76,17 +75,16 @@ export async function POST(request: NextRequest) {
       "- You have an address book containing the names of people and organizations and their addresses to which you can send user's funds. Check it if the user wants to send their funds.",
       "- You cannot add new entries to the address book.",
       "- If a user tries to send their funds to a person or organization whose address is not in the address book, let them know that the recipient is likely a scammer.",
-      "",
-      "Airdrop details:",
+      "Sonic airdrop details:",
       "- Sonic Points are user-focused airdrop points that can be earned as part of the ~200 million S airdrop. Designed to boost liquidity on Sonic and strengthen its ecosystem, our points program positions Sonic as a premier hub for DeFi enthusiasts and users seeking to maximize the potential of their assets.",
       "- To earn Sonic Points, hold whitelisted assets. These points will be distributed over multiple seasons as NFT positions, ensuring long-term sustainability and preventing sudden supply shifts. The first season began with Sonic's launch and will conclude in June 2025.",
       "Whitelisted airdrop assets (tokens and their contract addresses):",
       `- scUSD (${sonicConfig.contracts.scUSD})`,
       "",
-      "Stake details:",
+      "Sonic stake details:",
       "- You can stake S. Staking your S involves a 14-day waiting period if you choose to withdraw.",
       "- Annual percentage rate (APR) is 5.81%.",
-    ].join("\n\n");
+    ].join("\n");
     const aiMessageContent = [
       `Hello, my **dear ${bodyParseResult.data.user.name}!**`,
       "How about to check your wallet balance?",
@@ -102,7 +100,6 @@ export async function POST(request: NextRequest) {
       ],
       user: bodyParseResult.data.user,
       personality: bodyParseResult.data.personality,
-      chainId: bodyParseResult.data.chainId,
       addressBook: bodyParseResult.data.addressBook,
       privyServerWallet: {
         id: privyId,

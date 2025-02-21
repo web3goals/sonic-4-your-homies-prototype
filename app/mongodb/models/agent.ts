@@ -15,7 +15,6 @@ export class Agent {
       emoji: string;
       features: string;
     },
-    public chainId: number,
     public addressBook: { name: string; address: string }[],
     public privyServerWallet: {
       id: string;

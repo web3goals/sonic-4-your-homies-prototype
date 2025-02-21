@@ -9,7 +9,6 @@ import { usePrivy } from "@privy-io/react-auth";
 import axios from "axios";
 import { ArrowRightIcon, DrumIcon, Loader2Icon } from "lucide-react";
 import { useState } from "react";
-import { sonic } from "viem/chains";
 
 export function NewAgentFinalStepSection(props: {
   newAgentRequestData: NewAgentRequestData;
@@ -30,7 +29,6 @@ export function NewAgentFinalStepSection(props: {
       // Prepare a request data
       const requestData = { ...props.newAgentRequestData };
       requestData.creatorId = user.id;
-      requestData.chainId = sonic.id;
       if (
         !props.newAgentRequestData.twitter?.apiKey ||
         !props.newAgentRequestData.twitter?.apiSecret ||

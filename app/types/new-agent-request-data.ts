@@ -9,7 +9,6 @@ export type NewAgentRequestData = {
     emoji: string;
     features: string;
   };
-  chainId?: number;
   addressBook?: { name: string; address: string }[];
   twitter?: {
     apiKey: string | undefined;
