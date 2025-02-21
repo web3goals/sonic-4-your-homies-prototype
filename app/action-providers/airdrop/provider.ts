@@ -1,3 +1,4 @@
+import { chainsConfig } from "@/config/chains";
 import { ActionProvider, CreateAction, Network } from "@coinbase/agentkit";
 import { sonic } from "viem/chains";
 import { GetAirdropDetailsSchema } from "./schemas";
@@ -26,7 +27,7 @@ export class AirdropActionProvider extends ActionProvider {
         "- Sonic Points are user-focused airdrop points that can be earned as part of the ~200 million S airdrop. Designed to boost liquidity on Sonic and strengthen its ecosystem, our points program positions Sonic as a premier hub for DeFi enthusiasts and users seeking to maximize the potential of their assets.",
         "- To earn Sonic Points, hold whitelisted assets. These points will be distributed over multiple seasons as NFT positions, ensuring long-term sustainability and preventing sudden supply shifts. The first season began with Sonic's launch and will conclude in June 2025.",
         "Whitelisted Assets:",
-        "- scUSD (Token Contract Address is 0x467475e67f1c290a984abb54b49ae8fe8f68498c)",
+        `- scUSD (Token Contract Address is ${chainsConfig[0].contracts.scUSD})`,
         "Your balance:",
         "- 0 Passive Points (PP)",
       ].join("\n");
