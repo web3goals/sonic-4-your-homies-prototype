@@ -31,15 +31,14 @@ export function AgentMessageCard(props: {
     );
   }
 
-  // TODO: Comment following code for production
   // Other messages
-  return (
-    <div className="flex-1 border rounded-lg px-4 py-3">
-      <pre className="text-sm text-muted-foreground text-wrap break-all">
-        {JSON.stringify(props.message, null, 2)}
-      </pre>
-    </div>
-  );
+  // return (
+  //   <div className="flex-1 border rounded-lg px-4 py-3">
+  //     <pre className="text-sm text-muted-foreground text-wrap break-all">
+  //       {JSON.stringify(props.message, null, 2)}
+  //     </pre>
+  //   </div>
+  // );
 
   return <></>;
 }
