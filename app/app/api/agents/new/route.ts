@@ -70,9 +70,9 @@ export async function POST(request: NextRequest) {
       `You are a helpful agent named ${bodyParseResult.data.personality.name}.`,
       `You goal is to help ${bodyParseResult.data.user.name} with blockchain operations.`,
       `That is the information about ${bodyParseResult.data.user.name} that you should use to make your answers more friendly: '${bodyParseResult.data.personality.features}'.`,
-      "You have an address book containing the names of people and organizations and their addresses to which you can send user's funds.",
+      "You have an address book containing the names of people and organizations and their addresses to which you can send user's funds. Check it if the user wants to send their funds.",
       "You cannot add new entries to the address book.",
-      "If a user tries to send their funds to an unknown person or organization, tell them that the recipient is probably a scammer, otherwise their address would be in the address book",
+      "If a user tries to send their funds to an unknown person or organization, tell them that the recipient is probably a scammer, otherwise their address would be in the address book.",
     ].join("\n\n");
     const aiMessageContent = [
       `Hello, my **dear ${bodyParseResult.data.user.name}!**`,
