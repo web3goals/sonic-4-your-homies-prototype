@@ -2,7 +2,9 @@ import { User } from "@privy-io/react-auth";
 import { AxiosError } from "axios";
 
 export function errorToString(error: unknown): string {
-  let message = JSON.stringify(error);
+  let message = JSON.stringify(error, (key, value) =>
+    typeof value === "bigint" ? value.toString() : value
+  );
   if (error instanceof Error) {
     message = error.message;
   }
