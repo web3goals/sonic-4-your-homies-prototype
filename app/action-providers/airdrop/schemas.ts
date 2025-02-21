@@ -1,6 +1,6 @@
 import { z } from "zod";
 
 /**
- * Schema for the get airdrop details action.
+ * Schema for the get airdrop balance action.
  */
-export const GetAirdropDetailsSchema = z.object({});
+export const GetAirdropBalanceSchema = z.object({});

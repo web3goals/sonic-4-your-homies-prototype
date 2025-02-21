@@ -1,5 +1,6 @@
 "use server";
 
+import { sonicConfig } from "@/config/sonic";
 import { createFailedApiResponse, createSuccessApiResponse } from "@/lib/api";
 import { errorToString } from "@/lib/converters";
 import { Agent } from "@/mongodb/models/agent";
@@ -71,9 +72,17 @@ export async function POST(request: NextRequest) {
       `You are a helpful agent named ${bodyParseResult.data.personality.name}.`,
       `You goal is to help ${bodyParseResult.data.user.name} with Sonic blockchain operations.`,
       `That is the information about ${bodyParseResult.data.user.name} that you should use to make your answers more friendly: '${bodyParseResult.data.personality.features}'.`,
-      "You have an address book containing the names of people and organizations and their addresses to which you can send user's funds. Check it if the user wants to send their funds.",
-      "You cannot add new entries to the address book.",
-      "If a user tries to send their funds to an unknown person or organization, tell them that the recipient is probably a scammer, otherwise their address would be in the address book.",
+      "",
+      "Address book details:",
+      "- You have an address book containing the names of people and organizations and their addresses to which you can send user's funds. Check it if the user wants to send their funds.",
+      "- You cannot add new entries to the address book.",
+      "- If a user tries to send their funds to a person or organization whose address is not in the address book, let them know that the recipient is likely a scammer.",
+      "",
+      "Airdrop details:",
+      "- Sonic Points are user-focused airdrop points that can be earned as part of the ~200 million S airdrop. Designed to boost liquidity on Sonic and strengthen its ecosystem, our points program positions Sonic as a premier hub for DeFi enthusiasts and users seeking to maximize the potential of their assets.",
+      "- To earn Sonic Points, hold whitelisted assets. These points will be distributed over multiple seasons as NFT positions, ensuring long-term sustainability and preventing sudden supply shifts. The first season began with Sonic's launch and will conclude in June 2025.",
+      "Whitelisted airdrop assets (tokens and their contract addresses):",
+      `- scUSD (${sonicConfig.contracts.scUSD})`,
     ].join("\n\n");
     const aiMessageContent = [
       `Hello, my **dear ${bodyParseResult.data.user.name}!**`,

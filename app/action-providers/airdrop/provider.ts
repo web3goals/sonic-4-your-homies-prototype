@@ -1,5 +1,5 @@
 import { ActionProvider, CreateAction } from "@coinbase/agentkit";
-import { GetAirdropDetailsSchema } from "./schemas";
+import { GetAirdropBalanceSchema } from "./schemas";
 
 /**
  * An action provider with tools for airdrop.
@@ -10,29 +10,24 @@ export class AirdropActionProvider extends ActionProvider {
   }
 
   /**
-   * Gets the airdrop details.
+   * Gets the airdrop balance.
    */
   @CreateAction({
-    name: "get_airdrop_details",
+    name: "get_airdrop_balance",
     description:
-      "This tool will return the details about airdrop including rules and balance.",
-    schema: GetAirdropDetailsSchema,
+      "This tool will return the airdrop balance including passive points.",
+    schema: GetAirdropBalanceSchema,
   })
-  async getAirdropDetails(): Promise<string> {
+  async getAirdropBalance(): Promise<string> {
     try {
       const passivePoints = 0; // TODO: Use API to get this value
 
       return [
-        "Airdrop Details:",
-        "- Sonic Points are user-focused airdrop points that can be earned as part of the ~200 million S airdrop. Designed to boost liquidity on Sonic and strengthen its ecosystem, our points program positions Sonic as a premier hub for DeFi enthusiasts and users seeking to maximize the potential of their assets.",
-        "- To earn Sonic Points, hold whitelisted assets. These points will be distributed over multiple seasons as NFT positions, ensuring long-term sustainability and preventing sudden supply shifts. The first season began with Sonic's launch and will conclude in June 2025.",
-        "Whitelisted Assets:",
-        "- scUSD",
-        "Your balance:",
-        `- ${passivePoints} Passive Points (PP)`,
+        "Airdrop balance:",
+        `- Passive Points (PP): ${passivePoints} `,
       ].join("\n");
     } catch (error) {
-      return `Error getting airdrop details: ${error}`;
+      return `Error getting airdrop balance: ${error}`;
     }
   }
 
