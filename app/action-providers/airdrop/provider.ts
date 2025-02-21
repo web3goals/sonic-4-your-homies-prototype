@@ -1,4 +1,9 @@
-import { ActionProvider, CreateAction } from "@coinbase/agentkit";
+import {
+  ActionProvider,
+  CreateAction,
+  ViemWalletProvider,
+} from "@coinbase/agentkit";
+import axios from "axios";
 import { GetAirdropBalanceSchema } from "./schemas";
 
 /**
@@ -15,16 +20,23 @@ export class AirdropActionProvider extends ActionProvider {
   @CreateAction({
     name: "get_airdrop_balance",
     description:
-      "This tool will return the airdrop balance including passive points.",
+      "This tool will return the airdrop balance including total points, passive points, active points, rank",
     schema: GetAirdropBalanceSchema,
   })
-  async getAirdropBalance(): Promise<string> {
+  async getAirdropBalance(walletProvider: ViemWalletProvider): Promise<string> {
     try {
-      const passivePoints = 0; // TODO: Use API to get this value
+      // Send request to Sonic dashboard
+      const { data } = await axios.get(
+        "https://www.data-openblocklabs.com/sonic/user-points-stats",
+        { params: { wallet_address: walletProvider.getAddress() } }
+      );
 
       return [
         "Airdrop balance:",
-        `- Passive Points (PP): ${passivePoints} `,
+        `- Total Points (Sonic Points): ${data.sonic_points} `,
+        `- Passive Points (PP): ${data.passive_liquidity_points} `,
+        `- Active Points (PP): ${data.active_liquidity_points} `,
+        `- Rank: ${data.rank} `,
       ].join("\n");
     } catch (error) {
       return `Error getting airdrop balance: ${error}`;
