@@ -9,4 +9,6 @@ export const sonicConfig = {
     scUSD: "0xd3DCe716f3eF535C5Ff8d041c1A41C3bd89b97aE" as Address,
   },
   stakeValidatorId: 18,
+  deBridgeChainId: "100000014",
+  deBridgeNativeTokenAddress: "0x0000000000000000000000000000000000000000",
 };
