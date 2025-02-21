@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 /**
- * Schema for the get stake details action.
+ * Schema for the get stake balance action.
  */
-export const GetStakeDetailsSchema = z.object({});
+export const GetStakeBalanceSchema = z.object({});
 
 /**
  * Schema for the stake action.

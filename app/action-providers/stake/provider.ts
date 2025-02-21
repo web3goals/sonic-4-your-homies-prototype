@@ -15,7 +15,7 @@ import {
 import { sonic } from "viem/chains";
 import { z } from "zod";
 import { stakeAbi } from "./abi/stake";
-import { GetStakeDetailsSchema, StakeSchema } from "./schemas";
+import { GetStakeBalanceSchema, StakeSchema } from "./schemas";
 
 /**
  * An action provider with tools for stake.
@@ -26,19 +26,18 @@ export class StakeActionProvider extends ActionProvider {
   }
 
   /**
-   * Gets the stake details.
+   * Gets the stake balance.
    */
   @CreateAction({
-    name: "get_stake_details",
+    name: "get_stake_balance",
     description: [
-      "This tool will return the details about stake including:",
-      "- Annual percentage rate (APR) value",
-      "- Number of stake tokens",
+      "This tool will return the stake balance including:",
+      "- Number of staked tokens",
       "- Number of reward tokens",
     ].join("\n"),
-    schema: GetStakeDetailsSchema,
+    schema: GetStakeBalanceSchema,
   })
-  async getStakeDetails(walletProvider: ViemWalletProvider): Promise<string> {
+  async getStakeBalance(walletProvider: ViemWalletProvider): Promise<string> {
     try {
       // Get stake tokens
       const publicClient = createPublicClient({
@@ -59,16 +58,12 @@ export class StakeActionProvider extends ActionProvider {
       const rewardTokens = BigInt(0); // TODO: Use contract to get this value
 
       return [
-        "Stake Details:",
-        "- You can stake S. Staking your S involves a 14-day waiting period if you choose to withdraw.",
-        "- Annual percentage rate (APR) is 5.81%.",
-        "Your stake tokens:",
-        `- ${formatEther(stakeTokens)} S`,
-        "Your reward tokens:",
-        `- ${formatEther(rewardTokens)} S`,
+        "Stake balance:",
+        `- Staked: ${formatEther(stakeTokens)} S`,
+        `- Reward: ${formatEther(rewardTokens)} S`,
       ].join("\n");
     } catch (error) {
-      return `Error getting stake details: ${error}`;
+      return `Error getting stake balance: ${error}`;
     }
   }
 

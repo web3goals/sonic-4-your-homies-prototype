@@ -67,7 +67,6 @@ export async function POST(request: NextRequest) {
     console.log("Privy Server Wallet is created");
 
     // Create an agent
-    // TODO: Add token addresses, add information about staking, airdrop, etc.
     const systemMessageContent = [
       `You are a helpful agent named ${bodyParseResult.data.personality.name}.`,
       `You goal is to help ${bodyParseResult.data.user.name} with Sonic blockchain operations.`,
@@ -83,6 +82,10 @@ export async function POST(request: NextRequest) {
       "- To earn Sonic Points, hold whitelisted assets. These points will be distributed over multiple seasons as NFT positions, ensuring long-term sustainability and preventing sudden supply shifts. The first season began with Sonic's launch and will conclude in June 2025.",
       "Whitelisted airdrop assets (tokens and their contract addresses):",
       `- scUSD (${sonicConfig.contracts.scUSD})`,
+      "",
+      "Stake details:",
+      "- You can stake S. Staking your S involves a 14-day waiting period if you choose to withdraw.",
+      "- Annual percentage rate (APR) is 5.81%.",
     ].join("\n\n");
     const aiMessageContent = [
       `Hello, my **dear ${bodyParseResult.data.user.name}!**`,
