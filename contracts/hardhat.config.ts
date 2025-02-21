@@ -16,6 +16,10 @@ const config: HardhatUserConfig = {
     },
   },
   networks: {
+    sonic: {
+      url: "https://rpc.soniclabs.com",
+      accounts: [process.env.PRIVATE_KEY as string],
+    },
     sonicTestnet: {
       url: "https://rpc.blaze.soniclabs.com",
       accounts: [process.env.PRIVATE_KEY as string],
