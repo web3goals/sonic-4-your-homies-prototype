@@ -4,6 +4,7 @@ import { addressBookActionProvider } from "@/action-providers/address-book/provi
 import { airdropActionProvider } from "@/action-providers/airdrop/provider";
 import { erc20FactoryActionProvider } from "@/action-providers/erc20-factory/provider";
 import { erc20ActionProvider } from "@/action-providers/erc20/provider";
+import { stakeActionProvider } from "@/action-providers/stake/provider";
 import { twitterActionProvider } from "@/action-providers/twitter/provider";
 import { walletActionProvider } from "@/action-providers/wallet/provider";
 import { chainsConfig } from "@/config/chains";
@@ -95,6 +96,7 @@ export async function POST(
       actionProviders: [
         walletActionProvider(),
         airdropActionProvider(),
+        stakeActionProvider(),
         addressBookActionProvider({ addressBook: agent.addressBook }),
         erc20ActionProvider(),
         erc20FactoryActionProvider({
